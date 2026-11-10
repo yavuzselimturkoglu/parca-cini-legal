@@ -117,11 +117,7 @@
           <div id="price" class="price"></div>
           <div id="city-top" class="city"></div>
           <div class="fact-title">İlan Bilgileri</div>
-          <div class="fact-row"><b>İlan No</b><span id="listing-id" class="listing-code"></span></div>
-          <div class="fact-row"><b>İlan Tarihi</b><span id="created-at"></span></div>
-          <div class="fact-row"><b>Ürün Grubu</b><span>Motosiklet Yedek Parça</span></div>
-          <div class="fact-row"><b>Durumu</b><span id="condition"></span></div>
-          <div class="fact-row"><b>Konum</b><span id="location"></span></div>
+          <div id="fact-rows" aria-label="Ürün ve ilan özellikleri"></div>
         </section>
         <aside class="panel callout-card" aria-label="Satıcı iletişim bilgileri">
           <p class="seller-label">İLAN SAHİBİ VE İLETİŞİM</p>
@@ -156,7 +152,7 @@
   <script>
   (() => {
     'use strict';
-    const api = 'https://wwviljsegjmritgindso.supabase.co/functions/v1/pc-public-listing-v5';
+    const api = 'https://wwviljsegjmritgindso.supabase.co/functions/v1/pc-public-listing-v6';
     const id = new URLSearchParams(window.location.search).get('id') || '';
     const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const el = name => document.getElementById(name);
@@ -203,11 +199,26 @@
     fetch(api+'?id='+encodeURIComponent(id),{signal:controller.signal,cache:'no-store'})
       .then(async response=>{if(response.status===404)throw new Error('İlan bulunamadı veya artık yayında değil.');if(!response.ok)throw new Error('İlan bilgilerine şu anda erişilemiyor.');return response.json()})
       .then(data=>{if(data.id!==id)throw new Error('İlan numarası uyuşmuyor.');title=String(data.title||'Motosiklet yedek parça ilanı');el('title').textContent=title;document.title=title+' | Parça Cini';
-        el('heading-id').textContent=data.id;el('listing-id').textContent=data.id;
+        const displayNo='PC-'+data.id.replace(/-/g,'').slice(0,8).toUpperCase();
+        if (data.display_no !== displayNo) throw new Error('Ilan numarasi uygulama ile uyusmuyor.');
+        el('heading-id').textContent=displayNo;
+        if (!Array.isArray(data.detail_rows) || data.detail_rows.length < 3) throw new Error('Urun detaylari eksik alindi.');
+        const detailContainer=el('fact-rows');
+        const fragment=document.createDocumentFragment();
+        for (const row of data.detail_rows) {
+          if (!row || typeof row.label!=='string' || typeof row.value!=='string') continue;
+          if (!row.label.trim() || !row.value.trim()) continue;
+          const line=document.createElement('div');line.className='fact-row';
+          const label=document.createElement('b');label.textContent=row.label;
+          const val=document.createElement('span');val.textContent=row.value;
+          if (row.label==='İlan No')val.className='listing-code';
+          line.append(label,val);fragment.append(line);
+        }
+        detailContainer.replaceChildren(fragment);
         el('price').textContent=typeof data.price_try==='number'&&Number.isFinite(data.price_try)?new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(data.price_try)+' TL':'Fiyat belirtilmemiş';
-        const location=[data.district,data.city].filter(Boolean).join(' / ')||'Belirtilmemiş';el('city-top').textContent=location;el('location').textContent=location;el('location-bottom').textContent='Konum: '+location+' — Ayrıntılı konum bilgisi ilan sahibi tarafından paylaşılmışsa uygulamada görüntülenebilir.';
-        el('condition').textContent=data.condition||'Belirtilmemiş';
-        const created=data.created_at?new Date(data.created_at):null;el('created-at').textContent=created&&!Number.isNaN(created.getTime())?new Intl.DateTimeFormat('tr-TR',{dateStyle:'medium'}).format(created):'Belirtilmemiş';
+        const location=[data.district,data.city].filter(Boolean).join(' / ')||'Belirtilmemiş';el('city-top').textContent=location;el('location-bottom').textContent='Konum: '+location+' — Ayrıntılı konum bilgisi ilan sahibi tarafından paylaşılmışsa uygulamada görüntülenebilir.';
+
+
         el('description').textContent=data.description||'Aciklama belirtilmemis.';
         el('seller-name').textContent=typeof data.seller_name==='string'&&data.seller_name.trim()?data.seller_name.trim():'Parca Cini Uyesi';
         el('seller-sub').textContent='Parca Cini ilan sahibi';
