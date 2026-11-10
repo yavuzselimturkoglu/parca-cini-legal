@@ -59,6 +59,11 @@
     .primary-btn:hover{background:var(--red-dark)}
     .outline-btn{margin-top:8px;width:100%;background:#fff;color:#31445e;border:1px solid #ccd6e2;border-radius:6px;padding:11px 9px;font-size:12.5px;font-weight:750}
     .outline-btn:hover{background:#f5f7fa}
+    .contact-actions{display:grid;gap:9px;margin-top:7px}
+    .contact-actions .outline-btn{margin:0}
+    .contact-privacy{font-size:11px;color:#6a778a;line-height:1.6;margin:12px 0 0}
+    .map-disclaimer{font-size:11px;color:#8a95a2}
+    #map-link{display:inline-block;color:#245a9c;font-weight:700;margin-top:9px;text-decoration:underline;text-underline-offset:3px}
     .buyer-safety{font-size:11px;color:#707f91;line-height:1.6;border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
     .section-tabs{display:flex;align-items:end;gap:5px;margin-top:33px;border-bottom:2px solid var(--red)}
     .tab{background:var(--red);color:#fff;border-radius:6px 6px 0 0;padding:11px 23px;font-size:14px;font-weight:800}
@@ -122,9 +127,14 @@
           <p class="seller-label">İLAN SAHİBİ VE İLETİŞİM</p>
           <div class="seller-banner">
             <div class="seller-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></div>
-            <div><div class="seller-name">İlan sahibi</div><div class="seller-sub">İletişim uygulama içinde</div></div>
+            <div><div class="seller-name" id="seller-name">Par&#231;a Cini &#220;yesi</div><div class="seller-sub" id="seller-sub">&#304;lan sahibi &#183; profil g&#246;r&#252;nen ad&#305;</div></div>
           </div>
-          <p class="notice"><strong>Satıcıyla görüşmek ister misin?</strong> Mesajlaşma ve iletişim seçenekleri Parça Cini uygulaması üzerinden sunulur. Bu sayfa telefon veya kişisel iletişim bilgilerini paylaşmaz.</p>
+          <p class="notice"><strong id="contact-headline">Sat&#305;c&#305;yla ileti&#351;im</strong><br><span id="contact-note">&#304;leti&#351;im se&#231;enekleri y&#252;kleniyor.</span></p>
+          <div class="contact-actions" id="contact-actions" hidden>
+            <button type="button" class="primary-btn" id="seller-msg">&#9993; Uygulamada Mesaj G&#246;nder</button>
+            <button type="button" class="outline-btn" id="seller-phone" hidden>&#9742; Telefonu Uygulamada G&#246;r</button>
+          </div>
+          <p class="contact-privacy">Telefon numaras&#305; bu web sayfas&#305;nda herkese a&#231;&#305;k de&#287;ildir. G&#246;r&#252;nt&#252;leme ve mesajla&#351;ma i&#231;in Par&#231;a Cini uygulamas&#305;nda oturum a&#231;&#305;l&#305;r ve engelleme/ileti&#351;im tercihleri kontrol edilir.</p>
           <button type="button" class="primary-btn" id="share-button">İlanı WhatsApp'ta Paylaş</button>
           <button type="button" class="outline-btn" id="copy-link">İlan bağlantısını kopyala</button>
           <div class="buyer-safety">Parça Cini bir ilan platformudur. Bu web sayfasında ödeme veya satın alma işlemi yapılmaz.</div>
@@ -134,7 +144,7 @@
       <section class="description-panel" aria-label="İlan detayları">
         <div class="section-label">Açıklama</div>
         <p id="description" class="description"></p>
-        <div id="location-bottom" class="location-note"></div>
+        <div class="location-note"><strong>Konum:</strong> <span id="location-bottom"></span><br><a id="map-link" target="_blank" rel="noopener noreferrer" href="#">B&#246;lgeyi haritada g&#246;r&#252;nt&#252;le &#8599;</a><span class="map-disclaimer"> (Yaln&#305;zca il ve il&#231;e; &#246;zel konum payla&#351;&#305;lmaz.)</span></div>
       </section>
     </article>
     <p class="page-note">Yalnızca aktif ilanların herkese açık bilgileri gösterilir. Süresi dolmuş veya yayından kaldırılmış ilanlar görüntülenmez. İlan bilgileri satıcı tarafından sağlanır.</p>
@@ -146,7 +156,7 @@
   <script>
   (() => {
     'use strict';
-    const api = 'https://wwviljsegjmritgindso.supabase.co/functions/v1/pc-public-listing';
+    const api = 'https://wwviljsegjmritgindso.supabase.co/functions/v1/pc-public-listing-v5';
     const id = new URLSearchParams(window.location.search).get('id') || '';
     const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const el = name => document.getElementById(name);
@@ -168,6 +178,19 @@
       selectPhoto(0);
       el('photo-frame').addEventListener('click',()=>{el('lightbox-photo').src=validPhotos[selectedPhoto];el('lightbox').hidden=false;el('lightbox-close').focus()});
     }
+    function openAppContact(){
+      // This is a user-initiated test-app intent. It only opens the listing;
+      // the native app performs login, block and communication-preference checks.
+      if (/Android/i.test(navigator.userAgent)) {
+        const dest='intent://yavuzselimturkoglu.github.io/parca-cini-legal/ilan.html?id='+encodeURIComponent(id)+'#Intent;scheme=https;package=com.parcacini.app.sharetest;end';
+        window.location.assign(dest);
+        return;
+      }
+      copy(fullUrl());
+      toast('Bu islem uygulama icinde yapilir. Ilan baglantisi kopyalandi.');
+    }
+    el('seller-msg').addEventListener('click',openAppContact);
+    el('seller-phone').addEventListener('click',openAppContact);
     el('share-top').addEventListener('click',share);
     el('share-button').addEventListener('click',openWhatsapp);
     el('copy-link').addEventListener('click',()=>copy(fullUrl()));
@@ -185,7 +208,21 @@
         const location=[data.district,data.city].filter(Boolean).join(' / ')||'Belirtilmemiş';el('city-top').textContent=location;el('location').textContent=location;el('location-bottom').textContent='Konum: '+location+' — Ayrıntılı konum bilgisi ilan sahibi tarafından paylaşılmışsa uygulamada görüntülenebilir.';
         el('condition').textContent=data.condition||'Belirtilmemiş';
         const created=data.created_at?new Date(data.created_at):null;el('created-at').textContent=created&&!Number.isNaN(created.getTime())?new Intl.DateTimeFormat('tr-TR',{dateStyle:'medium'}).format(created):'Belirtilmemiş';
-        el('description').textContent=data.description||'Açıklama belirtilmemiş.';
+        el('description').textContent=data.description||'Aciklama belirtilmemis.';
+        el('seller-name').textContent=typeof data.seller_name==='string'&&data.seller_name.trim()?data.seller_name.trim():'Parca Cini Uyesi';
+        el('seller-sub').textContent='Parca Cini ilan sahibi';
+        const contact=data.contact_channels&&typeof data.contact_channels==='object'?data.contact_channels:{};
+        const sold=data.is_sold===true;
+        const msg=contact.messages===true&&!sold;
+        const phone=contact.phone_via_app===true&&!sold;
+        el('contact-actions').hidden=!(msg||phone);
+        el('seller-msg').hidden=!msg;
+        el('seller-phone').hidden=!phone;
+        el('contact-headline').textContent=sold?'Bu ilan satildi':'Saticiyla iletisim';
+        el('contact-note').textContent=sold?'Ilanin iletisim secenekleri kapali.':(msg&&phone?'Mesaj veya telefon secenegini secin.':msg?'Satici mesajlasmayi tercih ediyor.':phone?'Satici telefonla iletisimi tercih ediyor.':'Satici iletisim secenegi belirtmemis.');
+        const mapQuery=[data.district,data.city].filter(v=>typeof v==='string'&&v.trim()).join(', ');
+        el('map-link').hidden=!mapQuery;
+        if(mapQuery)el('map-link').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(mapQuery);
         makePhotoGallery(data.photos);el('status').hidden=true;el('details').hidden=false;
       }).catch(e=>{showError(e.name==='AbortError'?'İlan bilgileri zaman aşımına uğradı.':e.message||'İlan yüklenemedi.')}).finally(()=>clearTimeout(timeout));
   })();
