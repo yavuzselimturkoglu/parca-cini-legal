@@ -9,7 +9,7 @@
   <meta property="og:title" content="Parça Cini | Motosiklet Yedek Parça İlanı">
   <meta property="og:description" content="İlan fotoğraflarını, fiyatını ve açıklamasını inceleyin.">
   <meta property="og:image" content="https://yavuzselimturkoglu.github.io/parca-cini-legal/assets/parca-cini-logo.png">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; connect-src https://wwviljsegjmritgindso.supabase.co; img-src 'self' https://wwviljsegjmritgindso.supabase.co data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; connect-src https://wwviljsegjmritgindso.supabase.co; frame-src https://maps.google.com https://www.google.com; img-src 'self' https://wwviljsegjmritgindso.supabase.co data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
   <title>İlan Detayı | Parça Cini</title>
   <style>
     :root{--navy:#34415c;--navy-deep:#172338;--red:#d21e2e;--red-dark:#b41523;--white:#fff;--ink:#192338;--muted:#667387;--line:#e0e5ed;--bg:#f5f7fa;font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--ink);background:var(--bg)}
@@ -65,13 +65,31 @@
     .map-disclaimer{font-size:11px;color:#8a95a2}
     #map-link{display:inline-block;color:#245a9c;font-weight:700;margin-top:9px;text-decoration:underline;text-underline-offset:3px}
     .buyer-safety{font-size:11px;color:#707f91;line-height:1.6;border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
-    .section-tabs{display:flex;align-items:end;gap:5px;margin-top:33px;border-bottom:2px solid var(--red)}
-    .tab{background:var(--red);color:#fff;border-radius:6px 6px 0 0;padding:11px 23px;font-size:14px;font-weight:800}
-    .tab-alt{font-size:13px;color:#68768b;padding:11px 17px}
-    .description-panel{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;padding:23px 25px 25px;min-height:132px}
-    .section-label{font-size:13px;font-weight:800;margin-bottom:15px}
-    .description{font-size:14px;color:#263244;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
-    .location-note{margin-top:17px;padding:14px 17px;background:#f6f8fb;border:1px solid #e3e8f0;border-radius:7px;color:#53637a;font-size:12px}
+    /* V7: accessible, real detail/location tabs */
+    .detail-section{margin-top:33px}
+    .section-tabs{display:flex;align-items:flex-end;gap:8px;border-bottom:2px solid var(--red);overflow-x:auto}
+    .tab{appearance:none;background:#fff;color:#344962;border:1px solid #dce2eb;border-bottom:0;border-radius:9px 9px 0 0;padding:13px 24px;font-size:14px;font-weight:800;line-height:1.2;min-height:48px;white-space:nowrap;transition:background-color .15s ease,color .15s ease}
+    .tab[aria-selected="true"]{background:var(--red);color:#fff;border-color:var(--red)}
+    .tab[aria-selected="false"]:hover{background:#f6f8fb;border-color:#bac5d2}
+    .tab:focus-visible,.map-open:focus-visible{outline:3px solid #e9a3ab;outline-offset:2px}
+    .description-panel{background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:26px 30px 27px;box-shadow:0 5px 16px #13243e08;min-height:170px}
+    .section-label{font-size:19px;font-weight:850;margin:0 0 19px;color:var(--navy-deep);letter-spacing:-.3px}
+    .description{color:#29384b;overflow-wrap:anywhere;font-size:15px;line-height:1.85}
+    .description p{white-space:pre-line;margin:0 0 17px}.description p:last-child{margin-bottom:0}
+    .description ul{margin:8px 0 18px 23px;padding:0}.description li{padding-left:5px;margin:5px 0}
+    .safety-card{display:flex;align-items:flex-start;gap:14px;margin-top:27px;background:#f6f8fc;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;color:#445570;font-size:13px;line-height:1.7}
+    .safety-icon{display:flex;align-items:center;justify-content:center;flex:0 0 36px;height:36px;background:#eaf5ef;color:#17764b;border-radius:10px;font-size:20px;font-weight:800}
+    .safety-card strong{display:block;color:#23364e;margin-bottom:2px;font-size:14px}
+    .map-top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+    .map-title{margin:0 0 4px;font-size:21px;font-weight:850;color:var(--navy-deep)}
+    .map-subtitle{color:#68758a;font-size:13px;line-height:1.65;margin:0}
+    .map-open{display:inline-flex;gap:9px;align-items:center;text-decoration:none;white-space:nowrap;background:#f6f8fb;border:1px solid #ccd5e1;color:#284d7a;border-radius:9px;padding:12px 16px;font-weight:750;font-size:13px}
+    .map-open:hover{background:#eaf0f8}.map-open[hidden]{display:none}
+    .map-frame-wrap{position:relative;height:440px;background:#eef2f6;border:1px solid #dce3ec;border-radius:11px;overflow:hidden}
+    .map-frame-wrap iframe{display:block;width:100%;height:100%;border:0}
+    .map-empty{display:grid;place-items:center;text-align:center;width:100%;height:100%;padding:25px;color:#607089;font-size:14px;line-height:1.65}
+    .map-footnote{margin:14px 0 0;font-size:12px;line-height:1.65;color:#6a7789}
+    @media print{.toolbar,.contact-actions,.section-tabs,.map-open,.map-frame-wrap{display:none!important}.description-panel{border-top:1px solid var(--line)}#tab-details-panel{display:block!important}#tab-location-panel{display:none!important}}
     .page-note{font-size:12px;color:#7b899a;margin:24px 0 0;line-height:1.8}
     .loading{background:#fff;border:1px solid var(--line);border-radius:9px;padding:34px;text-align:center;color:var(--muted)}
     .loading.error{color:#b51d2b}.toast{position:fixed;bottom:23px;left:50%;transform:translateX(-50%);background:#1b2b43;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;box-shadow:0 8px 27px #0003;z-index:20}
@@ -80,7 +98,7 @@
     .modal-close{position:fixed;right:24px;top:21px;color:#fff;background:#ffffff26;border:1px solid #ffffff80;border-radius:7px;padding:8px 13px;font-size:14px;font-weight:750}
     [hidden]{display:none!important}
     @media(max-width:1080px){.listing-grid{grid-template-columns:minmax(0,1.1fr) minmax(270px,.85fr)}.callout-card{grid-column:1/-1}.header-inner{min-height:69px}.main-photo-frame{height:380px}}
-    @media(max-width:700px){.header-inner{padding:8px 14px;min-height:64px}.brand img{height:47px;width:47px}.brand-name{font-size:20px}.brand-sub{font-size:9px}.header-strap{display:none}.page{padding:15px 12px 35px}.crumbs{padding-bottom:12px;font-size:11px}.heading-row{display:block}.toolbar{margin-top:12px}.tool-button{flex:1;justify-content:center}.listing-grid{grid-template-columns:1fr;gap:12px}.photos{padding:9px}.main-photo-frame{height:min(78vw,420px);min-height:240px}.facts{padding:16px}.callout-card{grid-column:auto}.section-tabs{margin-top:25px}.description-panel{padding:20px 17px}.price{font-size:32px}}
+    @media(max-width:700px){.header-inner{padding:8px 14px;min-height:64px}.brand img{height:47px;width:47px}.brand-name{font-size:20px}.brand-sub{font-size:9px}.header-strap{display:none}.page{padding:15px 12px 35px}.crumbs{padding-bottom:12px;font-size:11px}.heading-row{display:block}.toolbar{margin-top:12px}.tool-button{flex:1;justify-content:center}.listing-grid{grid-template-columns:1fr;gap:12px}.photos{padding:9px}.main-photo-frame{height:min(78vw,420px);min-height:240px}.facts{padding:16px}.callout-card{grid-column:auto}.detail-section{margin-top:25px}.description-panel{padding:20px 17px}.map-frame-wrap{height:330px}.tab{padding:12px 17px;font-size:13px}.map-top{align-items:flex-start}.price{font-size:32px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important}}
   </style>
 </head>
@@ -136,12 +154,31 @@
           <div class="buyer-safety">Parça Cini bir ilan platformudur. Bu web sayfasında ödeme veya satın alma işlemi yapılmaz.</div>
         </aside>
       </div>
-      <div class="section-tabs" role="heading" aria-level="2"><span class="tab">İlan Detayları</span><span class="tab-alt">Açıklama ve Konum</span></div>
-      <section class="description-panel" aria-label="İlan detayları">
-        <div class="section-label">Açıklama</div>
-        <p id="description" class="description"></p>
-        <div class="location-note"><strong>Konum:</strong> <span id="location-bottom"></span><br><a id="map-link" target="_blank" rel="noopener noreferrer" href="#">B&#246;lgeyi haritada g&#246;r&#252;nt&#252;le &#8599;</a><span class="map-disclaimer"> (Yaln&#305;zca il ve il&#231;e; &#246;zel konum payla&#351;&#305;lmaz.)</span></div>
-      </section>
+      <div class="detail-section">
+        <div class="section-tabs" role="tablist" aria-label="İlan ayrıntıları">
+          <button type="button" class="tab" role="tab" id="tab-details-button" aria-controls="tab-details-panel" aria-selected="true" tabindex="0">İlan Detayları</button>
+          <button type="button" class="tab" role="tab" id="tab-location-button" aria-controls="tab-location-panel" aria-selected="false" tabindex="-1">Konumu</button>
+        </div>
+        <section class="description-panel" id="tab-details-panel" role="tabpanel" tabindex="0" aria-labelledby="tab-details-button">
+          <h2 class="section-label">Açıklama</h2>
+          <div id="description" class="description"></div>
+          <div class="safety-card">
+            <div class="safety-icon" aria-hidden="true">✓</div>
+            <div><strong>Güvenli alışveriş önerisi</strong>Ürünü ve satıcı bilgilerini kontrol edin. Ürünü teslim almadan önce kapora veya ödeme göndermemeye özen gösterin. Parça Cini, alıcı ile satıcıyı buluşturan ilan platformudur.</div>
+          </div>
+        </section>
+        <section class="description-panel" id="tab-location-panel" role="tabpanel" tabindex="0" aria-labelledby="tab-location-button" hidden>
+          <div class="map-top">
+            <div><h2 id="location-bottom" class="map-title">İlanın Konumu</h2><p class="map-subtitle">İlan sahibinin paylaştığı il/ilçe düzeyindeki yaklaşık bölge.</p></div>
+            <a id="map-link" class="map-open" target="_blank" rel="noopener noreferrer" hidden>Google Haritalar'da Aç ↗</a>
+          </div>
+          <div class="map-frame-wrap">
+            <iframe id="listing-map" title="İlanın yaklaşık il ve ilçe haritası" loading="lazy" referrerpolicy="no-referrer" hidden></iframe>
+            <div id="map-empty" class="map-empty">Konum bilgisi yükleniyor...</div>
+          </div>
+          <p class="map-footnote">Güvenlik ve gizlilik nedeniyle harita, yalnızca belirtilen il/ilçenin yaklaşık merkezini gösterir; ürünün ya da satıcının kesin adresi değildir.</p>
+        </section>
+      </div>
     </article>
     <p class="page-note">Yalnızca aktif ilanların herkese açık bilgileri gösterilir. Süresi dolmuş veya yayından kaldırılmış ilanlar görüntülenmez. İlan bilgileri satıcı tarafından sağlanır.</p>
   </main>
@@ -173,6 +210,46 @@
       validPhotos.forEach((source,index)=>{const button=document.createElement('button');button.className='thumb';button.type='button';button.setAttribute('aria-label','Fotoğraf '+(index+1));const img=document.createElement('img');img.src=source;img.loading='lazy';img.alt='İlan fotoğrafı küçük resim '+(index+1);button.append(img);button.addEventListener('click',()=>selectPhoto(index));el('gallery').append(button)});
       selectPhoto(0);
       el('photo-frame').addEventListener('click',()=>{el('lightbox-photo').src=validPhotos[selectedPhoto];el('lightbox').hidden=false;el('lightbox-close').focus()});
+    }
+    // User-provided descriptions are converted to safe DOM nodes, never innerHTML.
+    function renderDescription(raw) {
+      const container=el('description');container.replaceChildren();
+      const content=typeof raw==='string' ? raw.replace(/\r\n?/g,'\n').trim() : '';
+      if(!content){const p=document.createElement('p');p.textContent='Bu ilan için açıklama eklenmemiş.';container.append(p);return;}
+      const lines=content.split('\n');let paragraph=[];let list=null;
+      const flush=()=>{if(!paragraph.length)return;const p=document.createElement('p');p.textContent=paragraph.join('\n');container.append(p);paragraph=[]};
+      for(const original of lines){const trimmed=original.trim();
+        if(!trimmed){flush();list=null;continue;}
+        const bullet=trimmed.match(/^(?:[-*•✓✔]|\d+[.)])\s+(.+)$/);
+        if(bullet){flush();if(!list){list=document.createElement('ul');container.append(list);}const li=document.createElement('li');li.textContent=bullet[1];list.append(li);}
+        else{list=null;paragraph.push(original);}
+      }
+      flush();
+    }
+    // Only approximate city/district is exposed; no seller coordinates.
+    let approximateLocation='';
+    let mapLoaded=false;
+    function openTab(which, focusTab=false){
+      const location=which==='location';
+      const detailButton=el('tab-details-button'),locationButton=el('tab-location-button');
+      detailButton.setAttribute('aria-selected',location?'false':'true');
+      locationButton.setAttribute('aria-selected',location?'true':'false');
+      detailButton.tabIndex=location?-1:0;locationButton.tabIndex=location?0:-1;
+      el('tab-details-panel').hidden=location;el('tab-location-panel').hidden=!location;
+      if(focusTab)(location?locationButton:detailButton).focus();
+      if(location && approximateLocation && !mapLoaded){
+        el('listing-map').src='https://maps.google.com/maps?q='+encodeURIComponent(approximateLocation+', Türkiye')+'&output=embed';
+        el('listing-map').hidden=false;el('map-empty').hidden=true;mapLoaded=true;
+      }
+    }
+    el('tab-details-button').addEventListener('click',()=>openTab('details'));
+    el('tab-location-button').addEventListener('click',()=>openTab('location'));
+    for(const button of [el('tab-details-button'),el('tab-location-button')]){
+      button.addEventListener('keydown',e=>{
+        if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();openTab(button.id==='tab-details-button'?'location':'details',true);}
+        else if(e.key==='Home'){e.preventDefault();openTab('details',true);}
+        else if(e.key==='End'){e.preventDefault();openTab('location',true);}
+      });
     }
     function openAppContact(){
       // This is a user-initiated test-app intent. It only opens the listing;
@@ -216,10 +293,10 @@
         }
         detailContainer.replaceChildren(fragment);
         el('price').textContent=typeof data.price_try==='number'&&Number.isFinite(data.price_try)?new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(data.price_try)+' TL':'Fiyat belirtilmemiş';
-        const location=[data.district,data.city].filter(Boolean).join(' / ')||'Belirtilmemiş';el('city-top').textContent=location;el('location-bottom').textContent='Konum: '+location+' — Ayrıntılı konum bilgisi ilan sahibi tarafından paylaşılmışsa uygulamada görüntülenebilir.';
+        const location=[data.district,data.city].filter(v=>typeof v==='string'&&v.trim()).join(' / ')||'Belirtilmemiş';el('city-top').textContent=location;el('location-bottom').textContent=location==='Belirtilmemiş'?'Konum belirtilmemiş':location;
 
 
-        el('description').textContent=data.description||'Aciklama belirtilmemis.';
+        renderDescription(data.description);
         el('seller-name').textContent=typeof data.seller_name==='string'&&data.seller_name.trim()?data.seller_name.trim():'Parca Cini Uyesi';
         el('seller-sub').textContent='Parca Cini ilan sahibi';
         const contact=data.contact_channels&&typeof data.contact_channels==='object'?data.contact_channels:{};
@@ -232,8 +309,10 @@
         el('contact-headline').textContent=sold?'Bu ilan satildi':'Saticiyla iletisim';
         el('contact-note').textContent=sold?'Ilanin iletisim secenekleri kapali.':(msg&&phone?'Mesaj veya telefon secenegini secin.':msg?'Satici mesajlasmayi tercih ediyor.':phone?'Satici telefonla iletisimi tercih ediyor.':'Satici iletisim secenegi belirtmemis.');
         const mapQuery=[data.district,data.city].filter(v=>typeof v==='string'&&v.trim()).join(', ');
+        approximateLocation=mapQuery;
         el('map-link').hidden=!mapQuery;
-        if(mapQuery)el('map-link').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(mapQuery);
+        if(mapQuery){el('map-link').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(mapQuery+', Türkiye');el('map-empty').textContent='Haritayı görüntülemek için yukarıdan Konumu sekmesini seçin.';}
+        else{el('map-empty').textContent='Bu ilan için konum bilgisi belirtilmemiş.';}
         makePhotoGallery(data.photos);el('status').hidden=true;el('details').hidden=false;
       }).catch(e=>{showError(e.name==='AbortError'?'İlan bilgileri zaman aşımına uğradı.':e.message||'İlan yüklenemedi.')}).finally(()=>clearTimeout(timeout));
   })();
