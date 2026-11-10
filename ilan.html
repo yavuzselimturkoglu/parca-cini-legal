@@ -145,10 +145,10 @@
           </div>
           <p class="notice"><strong id="contact-headline">Sat&#305;c&#305;yla ileti&#351;im</strong><br><span id="contact-note">&#304;leti&#351;im se&#231;enekleri y&#252;kleniyor.</span></p>
           <div class="contact-actions" id="contact-actions" hidden>
-            <button type="button" class="primary-btn" id="seller-msg">&#9993; Uygulamada Mesaj G&#246;nder</button>
+            <button type="button" class="primary-btn" id="seller-msg">&#9993; Mesaj G&#246;nder</button>
             <button type="button" class="outline-btn" id="seller-phone" hidden>&#9742; Telefonu Uygulamada G&#246;r</button>
           </div>
-          <p class="contact-privacy">Telefon numaras&#305; bu web sayfas&#305;nda herkese a&#231;&#305;k de&#287;ildir. G&#246;r&#252;nt&#252;leme ve mesajla&#351;ma i&#231;in Par&#231;a Cini uygulamas&#305;nda oturum a&#231;&#305;l&#305;r ve engelleme/ileti&#351;im tercihleri kontrol edilir.</p>
+          <p class="contact-privacy">Mesaj g&#246;ndermek i&#231;in giri&#351; yapmal&#305;s&#305;n&#305;z. Telefon numaras&#305; yaln&#305;zca sat&#305;c&#305;n&#305;n izin verdi&#287;i g&#252;venli kanallarda g&#246;sterilir.</p>
           <button type="button" class="primary-btn" id="share-button">İlanı WhatsApp'ta Paylaş</button>
           <button type="button" class="outline-btn" id="copy-link">İlan bağlantısını kopyala</button>
           <div class="buyer-safety">Parça Cini bir ilan platformudur. Bu web sayfasında ödeme veya satın alma işlemi yapılmaz.</div>
@@ -262,7 +262,7 @@
       copy(fullUrl());
       toast('Bu islem uygulama icinde yapilir. Ilan baglantisi kopyalandi.');
     }
-    el('seller-msg').addEventListener('click',openAppContact);
+    el('seller-msg').addEventListener('click',()=>{window.location.href='giris.html?ilan='+encodeURIComponent(id)});
     el('seller-phone').addEventListener('click',openAppContact);
     el('share-top').addEventListener('click',share);
     el('share-button').addEventListener('click',openWhatsapp);

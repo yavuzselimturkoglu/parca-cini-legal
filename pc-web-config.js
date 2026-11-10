@@ -1,0 +1,1 @@
+window.PC_WEB_CONFIG=Object.freeze({url:'https://wwviljsegjmritgindso.supabase.co',publishableKey:'sb_publishable_Nt8HPxDJO258fntMz8peHg_TmiVmSHU',signupEnabled:false,legalVersion:'',legalSha256:''});
