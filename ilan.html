@@ -3,55 +3,121 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#b81f2a">
-  <meta name="description" content="Paylasilan Parca Cini ilanini uygulamada acin.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'; img-src 'none'">
-  <title>Parça Cini — İlanı Uygulamada Aç</title>
+  <meta name="theme-color" content="#c51927">
+  <meta name="description" content="Parça Cini motosiklet yedek parça ilanını görüntüle.">
+  <meta property="og:title" content="Parça Cini — Motosiklet Yedek Parça İlanı">
+  <meta property="og:description" content="İlanı Parça Cini'de görüntüleyin.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; connect-src https://wwviljsegjmritgindso.supabase.co; img-src https://wwviljsegjmritgindso.supabase.co data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+  <title>İlan Detayı | Parça Cini</title>
   <style>
-    :root{color-scheme:light;font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif}
+    :root{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#18222e;background:#f4f5f7}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:#f5f6f8;color:#1c2533;display:flex;align-items:center;justify-content:center;padding:20px}
-    main{width:min(480px,100%);background:white;border-radius:20px;padding:30px;box-shadow:0 10px 40px #18263c16}
-    header{font-weight:900;color:#b81f2a;letter-spacing:.4px;font-size:24px}
-    h1{font-size:23px;margin:24px 0 12px;line-height:1.3}
-    p{line-height:1.65;color:#485567}
-    .code{border:1px solid #e3e6ec;border-radius:12px;padding:13px;overflow-wrap:anywhere;background:#fafbfc;font-size:13px}
-    a.primary{display:block;text-align:center;background:#b81f2a;color:#fff;padding:14px 18px;border-radius:12px;text-decoration:none;font-weight:750;margin-top:22px}
-    a.primary:hover{background:#991923}
-    small{display:block;margin-top:22px;line-height:1.6;color:#667387}
-    .error{color:#a12128}
+    body{margin:0}
+    .top{background:#111a28;border-bottom:4px solid #ef1b2b;color:#fff;padding:18px max(20px,calc((100% - 1100px)/2));font-weight:900;font-size:24px;letter-spacing:.2px}
+    .top b{color:#ff2836}
+    .wrap{max-width:1100px;margin:32px auto;padding:0 18px}
+    .panel{background:#fff;border-radius:18px;box-shadow:0 8px 32px #101b2810;padding:24px}
+    .eyebrow{color:#6c7787;font-size:13px}
+    h1{margin:8px 0 20px;font-size:clamp(24px,3vw,34px);line-height:1.2}
+    .layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:28px}
+    .main-photo{background:#eef0f3;border-radius:14px;aspect-ratio:4/3;width:100%;object-fit:contain}
+    .gallery{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+    .gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid #e0e5ec;cursor:pointer}
+    .price{font-size:34px;color:#cb1424;font-weight:850;margin:0 0 12px}
+    .meta{border-top:1px solid #e5e8ed;padding:13px 0;color:#344256}
+    .meta strong{display:block;font-size:12px;color:#667284;margin-bottom:3px}
+    .description{border-top:1px solid #e5e8ed;margin-top:26px;padding-top:18px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}
+    .status{padding:18px;color:#4c5b6d;text-align:center}
+    .error{color:#b51d2b}
+    .foot{margin-top:24px;font-size:13px;color:#6b7788;line-height:1.7}
+    [hidden]{display:none!important}
+    @media(max-width:720px){.layout{grid-template-columns:1fr}.wrap{margin:18px auto}.panel{padding:18px}.gallery{grid-template-columns:repeat(4,minmax(0,1fr))}}
   </style>
 </head>
 <body>
-<main data-version="pc-share-test-v2">
-  <header>PARÇA CİNİ</header>
-  <h1>İlanı uygulamada aç</h1>
-  <p id="message">Paylaşılan ilan bağlantısı kontrol ediliyor.</p>
-  <div id="code" class="code" hidden></div>
-  <a id="open" class="primary" href="#" hidden>Parça Cini TEST'te Aç</a>
-  <small>Test aşamasıdır. Bu sayfa ilan bilgilerini internette yayımlamaz; yalnızca ilan kodunu Parça Cini TEST uygulamasına gönderir. Uygulama yüklü değilse açma düğmesi çalışmayabilir.</small>
-</main>
-<script>
-(() => {
-  'use strict';
-  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const id = new URLSearchParams(window.location.search).get('id');
-  const msg = document.getElementById('message');
-  if (!id || !uuid.test(id)) {
-    msg.className = 'error';
-    msg.textContent = 'Gecersiz veya eksik ilan kodu. Gonderilen baglantiyi kontrol edin.';
-    return;
-  }
-  msg.textContent = 'Bu ilani Parca Cini TEST uygulamasinda goruntuleyebilirsiniz.';
-  const code = document.getElementById('code');
-  code.hidden = false;
-  code.textContent = 'İlan kodu: ' + id;
-  const button = document.getElementById('open');
-  // User must tap to launch. Chrome does not permit silent external-app launches.
-  // Package pinning keeps the original Parca Cini app untouched.
-  button.href = 'intent://ilan?id=' + encodeURIComponent(id) + '#Intent;scheme=parcacinisharetest;package=com.parcacini.app.sharetest;end';
-  button.hidden = false;
-})();
-</script>
+  <header class="top">PARÇA <b>CİNİ</b></header>
+  <main class="wrap">
+    <section class="panel">
+      <div id="status" class="status" role="status">İlan bilgileri yükleniyor...</div>
+      <div id="details" hidden>
+        <div class="eyebrow">Parça Cini / İlan Detayı</div>
+        <h1 id="title"></h1>
+        <div class="layout">
+          <div>
+            <img id="main-photo" class="main-photo" hidden alt="İlan fotoğrafı">
+            <div id="empty-photo" class="status" hidden>Bu ilanın fotoğrafı bulunmuyor.</div>
+            <div id="gallery" class="gallery"></div>
+          </div>
+          <div>
+            <p id="price" class="price"></p>
+            <div class="meta"><strong>Konum</strong><span id="location"></span></div>
+            <div class="meta"><strong>Ürün durumu</strong><span id="condition"></span></div>
+            <div class="meta"><strong>İlan kodu</strong><span id="listing-id"></span></div>
+            <div class="meta"><strong>Yayın tarihi</strong><span id="created-at"></span></div>
+          </div>
+        </div>
+        <div class="description"><strong>Açıklama</strong><p id="description"></p></div>
+      </div>
+    </section>
+    <p class="foot">Yalnızca yayında olan ilanların herkese açık bilgileri görüntülenir. İlan yayından kalktıysa ayrıntıları gösterilmez. Ödeme ve alışveriş işlemleri bu sayfada yapılmaz.</p>
+  </main>
+  <script>
+  (() => {
+    'use strict';
+    const api = 'https://wwviljsegjmritgindso.supabase.co/functions/v1/pc-public-listing';
+    const id = new URLSearchParams(location.search).get('id') || '';
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const el = (name) => document.getElementById(name);
+    const showError = (msg) => { el('status').textContent = msg; el('status').classList.add('error'); };
+    if (!uuid.test(id)) { showError('Geçersiz veya eksik ilan bağlantısı.'); return; }
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    fetch(`${api}?id=${encodeURIComponent(id)}`, {signal:controller.signal, cache:'no-store'})
+      .then(async (response) => {
+        if (response.status === 404) throw new Error('İlan bulunamadı veya artık yayında değil.');
+        if (!response.ok) throw new Error('İlan bilgilerine şu anda erişilemiyor.');
+        return response.json();
+      })
+      .then((data) => {
+        el('title').textContent = data.title || 'Motosiklet parçası';
+        document.title = `${data.title || 'İlan'} | Parça Cini`;
+        el('price').textContent = typeof data.price_try === 'number'
+          ? new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(data.price_try)
+          : 'Fiyat belirtilmemiş';
+        el('location').textContent = [data.district,data.city].filter(Boolean).join(' / ') || 'Belirtilmemiş';
+        el('condition').textContent = data.condition || 'Belirtilmemiş';
+        el('listing-id').textContent = data.id || id;
+        el('description').textContent = data.description || 'Açıklama belirtilmemiş.';
+        const created = data.created_at ? new Date(data.created_at) : null;
+        el('created-at').textContent = created && !isNaN(created.valueOf())
+          ? new Intl.DateTimeFormat('tr-TR',{dateStyle:'medium'}).format(created) : '—';
+
+        const safeOrigin = 'https://wwviljsegjmritgindso.supabase.co';
+        const photos = (Array.isArray(data.photos) ? data.photos : []).filter((source) => {
+          try { const u = new URL(source); return u.origin === safeOrigin && u.pathname.startsWith('/storage/v1/object/public/listing-images/'); }
+          catch { return false; }
+        }).slice(0,8);
+        if (photos.length) {
+          const main = el('main-photo');
+          main.src = photos[0];
+          main.hidden = false;
+          photos.forEach((source, index) => {
+            const img = document.createElement('img');
+            img.src = source;
+            img.loading = 'lazy';
+            img.alt = `İlan fotoğrafı ${index + 1}`;
+            img.addEventListener('click', () => { main.src = source; });
+            el('gallery').append(img);
+          });
+        } else {
+          el('empty-photo').hidden = false;
+        }
+        el('status').hidden = true;
+        el('details').hidden = false;
+      })
+      .catch((err) => { showError(err.message || 'İlan yüklenemedi.'); })
+      .finally(() => clearTimeout(timeout));
+  })();
+  </script>
 </body>
 </html>
