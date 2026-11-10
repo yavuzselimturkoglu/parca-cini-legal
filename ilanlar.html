@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Parça Cini motosiklet yedek parça ilanlarını keşfedin.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'self'; connect-src https://wwviljsegjmritgindso.supabase.co; img-src 'self' data: https://wwviljsegjmritgindso.supabase.co; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'">
+  <title>Tüm İlanlar | Parça Cini</title>
+  <link rel="stylesheet" href="pc-web-style.css">
+  <script defer src="pc-web-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+  <script defer src="pc-web-shared.js"></script>
+  <script defer src="pc-web-catalog.js"></script>
+</head>
+<body>
+  <header class="header"><div class="wrap header-inner"><img class="logo" src="assets/parca-cini-logo.png" alt="Parça Cini logosu"><div class="brand">PARÇA CİNİ<small>Motosiklet yedek parça ilan platformu</small></div></div></header>
+  <main class="wrap main catalog-main">
+    <div class="catalog-title-row"><div><div class="eyebrow">PARÇA CİNİ</div><h1 class="heading">Tüm İlanlar</h1><p class="sub">Aktif motosiklet yedek parça ilanlarını incele, ilgini çeken ilana dokun.</p></div><a class="catalog-account" href="giris.html">Giriş Yap / Üye Ol</a></div>
+    <form id="catalog-form" class="catalog-search" role="search"><label for="search" class="label">İlan ara</label><div class="catalog-search-row"><input class="field" id="search" type="search" maxlength="64" placeholder="Örn. Honda, far, fren..." autocomplete="off"><button class="btn" type="submit">Ara</button></div></form>
+    <p id="catalog-status" class="catalog-status" role="status" aria-live="polite">İlanlar yükleniyor...</p>
+    <div id="catalog-grid" class="catalog-grid" aria-label="Aktif ilanlar"></div>
+    <nav class="catalog-pagination" aria-label="İlan sayfaları"><button type="button" class="btn secondary" id="prev" disabled>← Önceki</button><span id="page">Sayfa 1</span><button type="button" class="btn secondary" id="next" disabled>Sonraki →</button></nav>
+    <p class="fine">Yalnızca yayındaki ilanlar listelenir. Ödeme ve satın alma işlemleri ilan sahipleriyle yapılır.</p>
+  </main>
+  <footer class="footer">Parça Cini, alıcı ve satıcıları buluşturan ücretsiz bir ilan platformudur.</footer>
+</body>
+</html>

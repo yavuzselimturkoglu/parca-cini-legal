@@ -91,6 +91,7 @@
     .map-footnote{margin:14px 0 0;font-size:12px;line-height:1.65;color:#6a7789}
     @media print{.toolbar,.contact-actions,.section-tabs,.map-open,.map-frame-wrap{display:none!important}.description-panel{border-top:1px solid var(--line)}#tab-details-panel{display:block!important}#tab-location-panel{display:none!important}}
     .page-note{font-size:12px;color:#7b899a;margin:24px 0 0;line-height:1.8}
+    .catalog-return{margin:0 0 14px}.catalog-return-link{display:inline-flex;text-decoration:none;background:#fff;border:1px solid #dbe2eb;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:750;color:#304967}.catalog-return-link:hover{background:#f4f7fb}.crumbs a{text-decoration:none}.crumbs a:hover{text-decoration:underline}
     .loading{background:#fff;border:1px solid var(--line);border-radius:9px;padding:34px;text-align:center;color:var(--muted)}
     .loading.error{color:#b51d2b}.toast{position:fixed;bottom:23px;left:50%;transform:translateX(-50%);background:#1b2b43;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;box-shadow:0 8px 27px #0003;z-index:20}
     .modal{position:fixed;inset:0;background:#0c152ae8;display:flex;align-items:center;justify-content:center;z-index:30;padding:30px}
@@ -114,7 +115,8 @@
   </header>
 
   <main class="page">
-    <nav class="crumbs" aria-label="Sayfa konumu"><span>Parça Cini</span><span class="arrow">›</span><span>Yedek Parça İlanları</span><span class="arrow">›</span><span class="current">İlan Detayı</span></nav>
+    <nav class="crumbs" aria-label="Sayfa konumu"><a href="ilanlar.html">Parça Cini</a><span class="arrow">›</span><a href="ilanlar.html">Yedek Parça İlanları</a><span class="arrow">›</span><span class="current">İlan Detayı</span></nav>
+    <p class="catalog-return"><a class="catalog-return-link" href="ilanlar.html">← Tüm İlanları Gör</a></p>
     <div id="status" role="status" class="loading">İlan bilgileri yükleniyor...</div>
     <article id="details" hidden>
       <div class="heading-row">
