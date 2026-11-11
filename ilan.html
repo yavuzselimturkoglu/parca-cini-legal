@@ -9,7 +9,7 @@
   <meta property="og:title" content="Parça Cini | Motosiklet Yedek Parça İlanı">
   <meta property="og:description" content="İlan fotoğraflarını, fiyatını ve açıklamasını inceleyin.">
   <meta property="og:image" content="https://yavuzselimturkoglu.github.io/parca-cini-legal/assets/parca-cini-logo.png">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; connect-src https://wwviljsegjmritgindso.supabase.co; frame-src https://maps.google.com https://www.google.com; img-src 'self' https://wwviljsegjmritgindso.supabase.co data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; connect-src https://wwviljsegjmritgindso.supabase.co; frame-src https://maps.google.com https://www.google.com; img-src 'self' https://wwviljsegjmritgindso.supabase.co data:; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
   <title>İlan Detayı | Parça Cini</title>
   <style>
     :root{--navy:#34415c;--navy-deep:#172338;--red:#d21e2e;--red-dark:#b41523;--white:#fff;--ink:#192338;--muted:#667387;--line:#e0e5ed;--bg:#f5f7fa;font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--ink);background:var(--bg)}
@@ -62,6 +62,13 @@
     .contact-actions{display:grid;gap:9px;margin-top:7px}
     .contact-actions .outline-btn{margin:0}
     .contact-privacy{font-size:11px;color:#6a778a;line-height:1.6;margin:12px 0 0}
+    .web-consent-card{margin:13px 0;padding:13px;border:1px solid #dbe5ef;background:#f8fafc;border-radius:9px;font-size:12px;line-height:1.6}
+    .web-consent-card strong{display:block;color:#253a55;font-size:13px;margin-bottom:5px}
+    .web-consent-card p{margin:5px 0 9px;color:#536478}
+    .web-consent-card label{display:flex;align-items:flex-start;gap:8px;font-weight:650;cursor:pointer}
+    .web-consent-card input{margin:4px 0 0;flex-shrink:0}
+    .web-consent-feedback{min-height:1em}
+
     .map-disclaimer{font-size:11px;color:#8a95a2}
     #map-link{display:inline-block;color:#245a9c;font-weight:700;margin-top:9px;text-decoration:underline;text-underline-offset:3px}
     .buyer-safety{font-size:11px;color:#707f91;line-height:1.6;border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
@@ -148,8 +155,15 @@
           <p class="notice"><strong id="contact-headline">Sat&#305;c&#305;yla ileti&#351;im</strong><br><span id="contact-note">&#304;leti&#351;im se&#231;enekleri y&#252;kleniyor.</span></p>
           <div class="contact-actions" id="contact-actions" hidden>
             <button type="button" class="primary-btn" id="seller-msg">&#9993; Mesaj G&#246;nder</button>
-            <button type="button" class="outline-btn" id="seller-phone" hidden>&#9742; Telefonu Uygulamada G&#246;r</button>
+            <button type="button" class="outline-btn" id="seller-phone" hidden>&#9742; Telefon Numarasını Göster</button>
           </div>
+          <section id="seller-web-consent" class="web-consent-card" hidden aria-label="İlan telefonunun webde görünürlüğü">
+            <strong>Telefonum webde gösterilsin mi?</strong>
+            <p>Bu izin yalnızca bu ilan içindir. İzin verirseniz Parça Cini web sitesine giriş yapan üyeler, ilan aktif olduğu sürece kayıtlı telefon numaranızı görüntüleyebilir. Tercihinizi dilediğiniz zaman kapatabilirsiniz. Telefonu görmek isteyen üyeler için erişim ve günlük görüntüleme sınırı uygulanır.</p>
+            <label><input id="web-consent-check" type="checkbox"> Numaramın bu ilanda web sitesi üzerinden gösterilmesine açıkça izin veriyorum.</label>
+            <button type="button" id="web-consent-save" class="outline-btn">Web telefon tercihimi kaydet</button>
+            <p id="web-consent-status" class="web-consent-feedback" role="status" aria-live="polite"></p>
+          </section>
           <p class="contact-privacy">Mesaj g&#246;ndermek i&#231;in giri&#351; yapmal&#305;s&#305;n&#305;z. Telefon numaras&#305; yaln&#305;zca sat&#305;c&#305;n&#305;n izin verdi&#287;i g&#252;venli kanallarda g&#246;sterilir.</p>
           <button type="button" class="primary-btn" id="share-button">İlanı WhatsApp'ta Paylaş</button>
           <button type="button" class="outline-btn" id="copy-link">İlan bağlantısını kopyala</button>
@@ -188,6 +202,8 @@
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <div id="lightbox" class="modal" role="dialog" aria-label="İlan fotoğrafı büyütülmüş görünüm" aria-modal="true" hidden><button type="button" class="modal-close" id="lightbox-close" aria-label="Büyük fotoğrafı kapat">Kapat ✕</button><img id="lightbox-photo" alt="Büyütülmüş ilan fotoğrafı"></div>
 
+  <script src="pc-web-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
   <script>
   (() => {
     'use strict';
@@ -253,19 +269,109 @@
         else if(e.key==='End'){e.preventDefault();openTab('location',true);}
       });
     }
-    function openAppContact(){
-      // This is a user-initiated test-app intent. It only opens the listing;
-      // the native app performs login, block and communication-preference checks.
-      if (/Android/i.test(navigator.userAgent)) {
-        const dest='intent://yavuzselimturkoglu.github.io/parca-cini-legal/ilan.html?id='+encodeURIComponent(id)+'#Intent;scheme=https;package=com.parcacini.app.sharetest;end';
-        window.location.assign(dest);
-        return;
+    // Web phone is separate, owner opt-in is required server side.
+    // All phone access still goes through the original restricted RPC as a second gate.
+    let webClient = null;
+    function getWebClient() {
+      const config = window.PC_WEB_CONFIG;
+      if (!config || config.url !== 'https://wwviljsegjmritgindso.supabase.co' ||
+          !config.publishableKey || config.publishableKey.includes('PASTE') ||
+          !window.supabase || !window.supabase.createClient) {
+        throw new Error('Web bağlantısı yapılandırması tamamlanmadı.');
       }
-      copy(fullUrl());
-      toast('Bu islem uygulama icinde yapilir. Ilan baglantisi kopyalandi.');
+      if (!webClient) {
+        webClient = window.supabase.createClient(config.url, config.publishableKey, {
+          auth: { persistSession:true, autoRefreshToken:true,
+            storageKey:'parcacini-web-auth-v1', detectSessionInUrl:true, flowType:'pkce' }
+        });
+      }
+      return webClient;
     }
+    async function currentVerifiedUser(client) {
+      const { data, error } = await client.auth.getUser();
+      if (error && error.name !== 'AuthSessionMissingError') throw error;
+      return data && data.user ? data.user : null;
+    }
+    let displayedPhone = null;
+    let showingPhone = false;
+    async function showPhone() {
+      if (displayedPhone) { window.location.href = 'tel:' + displayedPhone; return; }
+      if (showingPhone) return;
+      showingPhone = true;
+      const button = el('seller-phone');
+      const oldText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Telefon kontrol ediliyor...';
+      try {
+        const client = getWebClient();
+        const user = await currentVerifiedUser(client);
+        if (!user) {
+          toast('Telefonu webde görmek için giriş yapın.');
+          window.location.href = 'giris.html?ilan=' + encodeURIComponent(id) + '&next=telefon';
+          return;
+        }
+        const result = await client.rpc('pc_web_get_listing_phone_v1', {p_listing_id:id});
+        if (result.error) throw result.error;
+        const normalized = String(result.data || '').replace(/[\s().-]/g,'');
+        const phone = normalized.startsWith('00') ? '+' + normalized.slice(2) : normalized;
+        if (!/^\+?[0-9]{10,15}$/.test(phone)) {
+          throw new Error('Telefon numarası alınamadı. Sunucu yanıtı kontrol edilmeli.');
+        }
+        displayedPhone = phone;
+        button.textContent = '☎ Ara: ' + phone;
+        toast('Numara açıldı. Aramak için butona tekrar basın.');
+      } catch (e) {
+        console.warn('Parca Cini web telefon servisi:', e && (e.code || e.message));
+        toast('Telefon webde paylaşıma açık değil veya erişim koşulları karşılanmadı.');
+      } finally {
+        showingPhone = false;
+        button.disabled = false;
+        if (!displayedPhone) button.textContent = oldText;
+      }
+    }
+    async function setupOwnerWebConsent() {
+      try {
+        const client = getWebClient();
+        const user = await currentVerifiedUser(client);
+        if (!user) return;
+        const { data, error } = await client.rpc('pc_web_phone_consent_state_v1', {p_listing_id:id});
+        if (error) throw error;
+        if (!data || data.is_owner !== true) return;
+        const section = el('seller-web-consent');
+        section.hidden = false;
+        el('web-consent-check').checked = data.enabled === true;
+        el('web-consent-status').textContent = data.enabled === true
+          ? 'Bu ilanın telefonu web üzerinden gösterilebilir.'
+          : 'Bu ilanın telefonu web üzerinden gösterilmiyor.';
+      } catch (err) {
+        console.warn('Web telefon tercihi yüklenemedi:', err && (err.code || err.message));
+      }
+    }
+    async function saveOwnerWebConsent() {
+      const button=el('web-consent-save');
+      button.disabled=true;
+      el('web-consent-status').textContent='Tercihiniz kaydediliyor...';
+      try {
+        const client=getWebClient();
+        const user=await currentVerifiedUser(client);
+        if (!user) throw new Error('Giriş yapın.');
+        const enabled=el('web-consent-check').checked;
+        const {error}=await client.rpc('pc_web_set_phone_consent_v1', {p_listing_id:id, p_allow:enabled});
+        if(error) throw error;
+        displayedPhone=null;
+        el('seller-phone').textContent='☎ Telefon Numarasını Göster';
+        el('web-consent-status').textContent=enabled
+          ? 'İzin kaydedildi: Web üyeleri numaranızı görüntüleyebilir.'
+          : 'İzin kapatıldı: Webden telefon görüntüleme devre dışı.';
+        toast('Web telefon izni güncellendi.');
+      } catch(e) {
+        console.warn('Web telefon tercihi kaydedilemedi:', e && (e.code || e.message));
+        el('web-consent-status').textContent='İzin kaydedilemedi. Oturum ve ilan yetkilerini kontrol edin.';
+      } finally { button.disabled=false; }
+    }
+    el('web-consent-save').addEventListener('click',saveOwnerWebConsent);
     el('seller-msg').addEventListener('click',()=>{window.location.href='giris.html?ilan='+encodeURIComponent(id)});
-    el('seller-phone').addEventListener('click',openAppContact);
+    el('seller-phone').addEventListener('click',showPhone);
     el('share-top').addEventListener('click',share);
     el('share-button').addEventListener('click',openWhatsapp);
     el('copy-link').addEventListener('click',()=>copy(fullUrl()));
@@ -308,6 +414,7 @@
         el('contact-actions').hidden=!(msg||phone);
         el('seller-msg').hidden=!msg;
         el('seller-phone').hidden=!phone;
+        if (phone) { void setupOwnerWebConsent(); }
         el('contact-headline').textContent=sold?'Bu ilan satildi':'Saticiyla iletisim';
         el('contact-note').textContent=sold?'Ilanin iletisim secenekleri kapali.':(msg&&phone?'Mesaj veya telefon secenegini secin.':msg?'Satici mesajlasmayi tercih ediyor.':phone?'Satici telefonla iletisimi tercih ediyor.':'Satici iletisim secenegi belirtmemis.');
         const mapQuery=[data.district,data.city].filter(v=>typeof v==='string'&&v.trim()).join(', ');
